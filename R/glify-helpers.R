@@ -3,28 +3,15 @@ glifyDependencies = function() {
   list(
     htmltools::htmlDependency(
       "Leaflet.glify",
-      '2.1.0',
+      '3.0.1',
       system.file("htmlwidgets/Leaflet.glify", package = "leafgl"),
       script = c(
-        "addGlifyPoints.js",
-        "addGlifyPolygons.js",
-        "addGlifyPolylines.js",
-        "glify.js",
-        "src/js/canvasoverlay.js",
-        "src/js/gl.js",
-        "src/js/index.js",
-        "src/js/map-matrix.js",
-        "src/js/points.js",
-        "src/js/shapes.js",
-        "src/js/lines.js",
-        "src/js/utils.js",
-        "src/shader/fragment/dot.glsl",
-        "src/shader/fragment/point.glsl",
-        "src/shader/fragment/polygon.glsl",
-        "src/shader/fragment/puck.glsl",
-        "src/shader/fragment/simple-circle.glsl",
-        "src/shader/fragment/aquare.glsl",
-        "src/shader/vertex/default.glsl"
+        "GlifyUtils.js"
+        , "addGlifyPoints.js"
+        , "addGlifyPolygons.js"
+        , "addGlifyPolylines.js"
+        , "glify-browser.js"
+        # , "glify-browser.js.map"
       )
     )
   )
@@ -35,26 +22,14 @@ glifyDependenciesFl = function() {
   list(
     htmltools::htmlDependency(
       "Leaflet.glify",
-      '2.1.0',
+      '2.2.0',
       system.file("htmlwidgets/Leaflet.glify", package = "leafgl"),
       script = c(
-        "addGlifyPoints.js",
-        "addGlifyPolygonsFl.js",
-        "glify.js",
-        "src/js/canvasoverlay.js",
-        "src/js/gl.js",
-        "src/js/index.js",
-        "src/js/map-matrix.js",
-        "src/js/points.js",
-        "src/js/shapes.js",
-        "src/js/utils.js",
-        "src/shader/fragment/dot.glsl",
-        "src/shader/fragment/point.glsl",
-        "src/shader/fragment/polygon.glsl",
-        "src/shader/fragment/puck.glsl",
-        "src/shader/fragment/simple-circle.glsl",
-        "src/shader/fragment/aquare.glsl",
-        "src/shader/vertex/default.glsl"
+        "GlifyUtils.js"
+        , "addGlifyPoints.js"
+        , "addGlifyPolygonsFl.js"
+        , "addGlifyPolylines.js"
+        , "glify.js"
       )
     )
   )
@@ -65,27 +40,14 @@ glifyDependenciesSrc = function() {
   list(
     htmltools::htmlDependency(
       "Leaflet.glify",
-      '2.1.0',
+      '2.2.0',
       system.file("htmlwidgets/Leaflet.glify", package = "leafgl"),
       script = c(
-        "addGlifyPoints.js",
-        "addGlifyPolygonsSrc.js",
-        "addGlifyPointsSrc.js",
-        "glify.js",
-        "src/js/canvasoverlay.js",
-        "src/js/gl.js",
-        "src/js/index.js",
-        "src/js/map-matrix.js",
-        "src/js/points.js",
-        "src/js/shapes.js",
-        "src/js/utils.js",
-        "src/shader/fragment/dot.glsl",
-        "src/shader/fragment/point.glsl",
-        "src/shader/fragment/polygon.glsl",
-        "src/shader/fragment/puck.glsl",
-        "src/shader/fragment/simple-circle.glsl",
-        "src/shader/fragment/aquare.glsl",
-        "src/shader/vertex/default.glsl"
+        "GlifyUtils.js"
+        , "addGlifyPointsSrc.js"
+        , "addGlifyPolygonsSrc.js"
+        , "addGlifyPolylinesSrc.js"
+        , "glify-browser.js"
       )
     )
   )
@@ -134,6 +96,19 @@ glifyPopupAttachmentSrc = function(fl_popup, group) {
   list(
     htmltools::htmlDependency(
       name = paste0(group, "pop"),
+      version = 1,
+      src = c(file = data_dir),
+      script = list(data_file)
+    )
+  )
+}
+
+glifyRadiusAttachmentSrc = function(fl_radius, group) {
+  data_dir <- dirname(fl_radius)
+  data_file <- basename(fl_radius)
+  list(
+    htmltools::htmlDependency(
+      name = paste0(group, "rad"),
       version = 1,
       src = c(file = data_dir),
       script = list(data_file)

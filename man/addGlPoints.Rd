@@ -7,37 +7,81 @@
 \alias{addGlPolygons}
 \title{add polylines to a leaflet map using Leaflet.glify}
 \usage{
-addGlPolylines(map, data, color = cbind(0, 0.2, 1), opacity = 0.6,
-  group = "glpolylines", popup = NULL, ...)
+addGlPolylines(
+  map,
+  data,
+  color = cbind(0, 0.2, 1),
+  opacity = 0.6,
+  group = "glpolylines",
+  popup = NULL,
+  weight = 1,
+  layerId = NULL,
+  src = FALSE,
+  ...
+)
 
-addGlPoints(map, data, color = cbind(0, 0.2, 1), opacity = 1,
-  weight = 10, group = "glpoints", popup = NULL, ...)
+addGlPoints(
+  map,
+  data,
+  fillColor = "#0033ff",
+  fillOpacity = 0.8,
+  radius = 10,
+  group = "glpoints",
+  popup = NULL,
+  layerId = NULL,
+  src = FALSE,
+  ...
+)
 
-addGlPolygons(map, data, color = cbind(0, 0.2, 1), opacity = 0.6,
-  group = "glpolygons", popup = NULL, ...)
+addGlPolygons(
+  map,
+  data,
+  color = cbind(0, 0.2, 1),
+  fillColor = color,
+  fillOpacity = 0.8,
+  group = "glpolygons",
+  popup = NULL,
+  layerId = NULL,
+  src = FALSE,
+  ...
+)
 }
 \arguments{
 \item{map}{a leaflet map to add points/polygons to.}
 
 \item{data}{sf/sp point/polygon data to add to the map.}
 
-\item{color}{a three-column rgb matrix with values between 0 and 1.}
+\item{color}{Object representing the color. Can be of class integer, character with
+color names, HEX codes or random characters, factor, matrix, data.frame, list, json or formula.
+See the examples or \link{makeColorMatrix} for more information.}
 
 \item{opacity}{feature opacity. Numeric between 0 and 1.
 Note: expect funny results if you set this to < 1.}
 
 \item{group}{a group name for the feature layer.}
 
-\item{popup}{the name of the column in data to be used for popups.}
+\item{popup}{Object representing the popup. Can be of type character with column names,
+formula, logical, data.frame or matrix, Spatial, list or JSON. If the lenght does not
+match the number of rows in the dataset, the popup vector is repeated to match the dimension.}
 
-\item{...}{ignored.}
+\item{weight}{line width/thicknes in pixels for \code{addGlPolylines}.}
 
-\item{weight}{point size in pixels.}
+\item{layerId}{the layer id}
+
+\item{src}{whether to pass data to the widget via file attachments.}
+
+\item{...}{Passed to \code{\link[jsonify]{to_json}} for the data coordinates.}
+
+\item{fillColor}{fill color.}
+
+\item{fillOpacity}{fill opacity.}
+
+\item{radius}{point size in pixels.}
 }
 \description{
 Leaflet.glify is a web gl renderer plugin for leaflet. See
   \url{https://github.com/robertleeplummerjr/Leaflet.glify} for details
-  and documentation. Currently not all functionality is implemented here.
+  and documentation.
 }
 \details{
 MULTILINESTRINGs are currently not supported! Make sure you cast your data
@@ -57,73 +101,51 @@ MULTIPOLYGONs are currently not supported! Make sure you cast your data
 
 \examples{
 if (interactive()) {
-library(mapview)
 library(leaflet)
 library(leafgl)
 library(sf)
-library(colourvalues)
 
-trls = st_cast(trails, "LINESTRING")
+storms = st_as_sf(atlStorms2005)
 
-cols = colour_values_rgb(trls$district, include_alpha = FALSE) / 255
-
-options(viewer = NULL)
+cols = heat.colors(nrow(storms))
 
 leaflet() \%>\%
-  addProviderTiles(provider = providers$CartoDB.DarkMatter) \%>\%
-  addGlPolylines(data = trls, color = cols, popup = "FGN", opacity = 1) \%>\%
-  addMouseCoordinates() \%>\%
-  setView(lng = 10.5, lat = 49.5, zoom = 8)
+  addProviderTiles(provider = providers$CartoDB.Positron) \%>\%
+  addGlPolylines(data = storms, color = cols, popup = TRUE, opacity = 1)
 }
 
 if (interactive()) {
-library(mapview)
 library(leaflet)
 library(leafgl)
 library(sf)
-library(colourvalues)
-library(jsonlite)
 
-n = 1e6
+n = 1e5
 
 df1 = data.frame(id = 1:n,
                  x = rnorm(n, 10, 1),
                  y = rnorm(n, 49, 0.8))
 pts = st_as_sf(df1, coords = c("x", "y"), crs = 4326)
 
-cols = colour_values_rgb(pts$id, include_alpha = FALSE) / 255
-
-options(viewer = NULL)
-
-system.time({
-  m = leaflet() \%>\%
-    addProviderTiles(provider = providers$CartoDB.DarkMatter) \%>\%
-    addGlPoints(data = pts, color = cols, popup = "id") \%>\%
-    addMouseCoordinates() \%>\%
-    setView(lng = 10.5, lat = 49.5, zoom = 9)
-})
-
-m
-}
-
-if (interactive()) {
-library(mapview)
-library(leaflet)
-library(leafgl)
-library(sf)
-library(colourvalues)
-
-fran = st_cast(franconia, "POLYGON")
-
-cols = colour_values_rgb(fran$NUTS_ID, include_alpha = FALSE) / 255
-
-options(viewer = NULL)
+cols = topo.colors(nrow(pts))
 
 leaflet() \%>\%
   addProviderTiles(provider = providers$CartoDB.DarkMatter) \%>\%
-  addGlPolygons(data = fran, color = cols, popup = "NAME_ASCI") \%>\%
-  addMouseCoordinates() \%>\%
-  setView(lng = 10.5, lat = 49.5, zoom = 8)
+  addGlPoints(data = pts, fillColor = cols, popup = TRUE)
+
+}
+
+if (interactive()) {
+library(leaflet)
+library(leafgl)
+library(sf)
+
+gadm = st_as_sf(gadmCHE)
+gadm = st_cast(gadm, "POLYGON")
+cols = grey.colors(nrow(gadm))
+
+leaflet() \%>\%
+  addProviderTiles(provider = providers$CartoDB.DarkMatter) \%>\%
+  addGlPolygons(data = gadm, color = cols, popup = TRUE)
 }
 
 }

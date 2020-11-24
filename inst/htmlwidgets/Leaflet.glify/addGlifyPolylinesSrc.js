@@ -1,18 +1,24 @@
-LeafletWidget.methods.addGlifyPolygonsSrc = function(fillColor, fillOpacity, group, layerId) {
+LeafletWidget.methods.addGlifyPolylinesSrc = function(color, weight, opacity, group, layerId) {
 
   var map = this;
 
-// FIX ME clrs, pop need to be layer specificly named!!!!!
-
   // color
   var clrs;
-  if (fillColor === null) {
+  if (color === null) {
     clrs = function(index, feature) { return col[layerId][0][index]; };
   } else {
-    clrs = fillColor;
+    clrs = color;
   }
 
-  var shapeslayer = L.glify.shapes({
+  // radius
+  var wght;
+  if (weight === null) {
+    wght = function(index, feature) { return wgt[layerId][0][index]; };
+  } else {
+    wght = weight;
+  }
+
+  var lineslayer = L.glify.lines({
     map: map,
     click: function (e, feature) {
       if (typeof(popup) === "undefined") {
@@ -20,7 +26,7 @@ LeafletWidget.methods.addGlifyPolygonsSrc = function(fillColor, fillOpacity, gro
       } else if (typeof(popup[layerId]) === "undefined") {
         return;
       } else {
-      if (map.hasLayer(shapeslayer.glLayer)) {
+      if (map.hasLayer(lineslayer.glLayer)) {
           var idx = data[layerId][0].features.findIndex(k => k==feature);
           L.popup()
             .setLatLng(e.latlng)
@@ -29,12 +35,15 @@ LeafletWidget.methods.addGlifyPolygonsSrc = function(fillColor, fillOpacity, gro
         }
       }
     },
+    latitudeKey: 1,
+    longitudeKey: 0,
     data: data[layerId][0],
     color: clrs,
-    opacity: fillOpacity,
+    opacity: opacity,
+    weight: wght,
     className: group
   });
 
-  map.layerManager.addLayer(shapeslayer.glLayer, null, null, group);
+  map.layerManager.addLayer(lineslayer.glLayer, null, null, group);
 
 };

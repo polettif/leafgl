@@ -1,36 +1,43 @@
 Package: leafgl
 Type: Package
-Title: Bindings for Leaflet.glify
+Title: High-Performance 'WebGl' Rendering for Package 'leaflet'
 Version: 0.1.1
 Authors@R: 
     c(person(given = "Tim",
              family = "Appelhans",
-             role = c("cre", "aut"),
+             role = c("cre", "aut", "cph"),
              email = "tim.appelhans@gmail.com"),
       person(given = "Colin",
              family = "Fay",
-             role = "aut",
+             role = "ctb",
              email = "colin@thinkr.fr",
              comment = structure("0000-0001-7343-1846", .Names = "ORCID")),
       person(given = "Robert",
              family = "Plummer",
              role = "ctb",
-             comment = "Leaflet.glify plugin"))
+             comment = "Leaflet.glify plugin"),
+      person(given = "Kent",
+             family = "Johnson",
+             role = "ctb",
+             email = "kjohnson@akoyabio.com"),
+      person(given = "Sebastian",
+             family = "Gatscha",
+             role = "ctb",
+             email = "sebastian_gatscha@gmx.at"))
 Maintainer: Tim Appelhans <tim.appelhans@gmail.com>
-Description: Provides bindings to Leaflet.glify which extends leaflet to render large data in the browser using webgl.
+Description: Provides bindings to the 'Leaflet.glify' JavaScript library which extends the 'leaflet' JavaScript library to render large data in the browser using 'WebGl'.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.0
+RoxygenNote: 7.0.2
 Imports:
   geojsonsf,
   htmltools,
-  jsonify, 
-  jsonlite,
+  jsonify,
   leaflet,
-  sf
+  sf,
+  grDevices
 Suggests:
-    colourvalues, 
-    mapview, 
-    shiny, 
-    testthat
+  colourvalues,
+  shiny,
+  testthat (>= 2.1.0)
